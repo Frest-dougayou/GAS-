@@ -1,0 +1,157 @@
+<script>
+  
+    const cnt = new Map();//各内容が何回買われたかを記録する 他のmapはいらなくなったけどこれだけは必要 何かで代用できそうではあるけどmapを使う keyは商品名を使う
+    
+    //下のように書くとvc<map...>>みたいなのが作れる
+        const data = [
+      { name: '商品A', money: 200 },
+      { name: '商品B', money: 200 },
+      { name: '商品C', money: 200 },
+      { name: '商品D', money: 200 },
+      { name: 'お買い得パック', money: 200 },
+      { name: 'わたあめ白', money: 50 },
+      { name: 'わたあめコーラ', money: 50 },
+      { name: '型抜き', money: 10 },
+      { name: '型抜き成功時のわたあめ', money: 10 }
+    ];
+    
+    function set_cnt(id){//cntにidが存在してなかったら定義する
+      if(!cnt.has(id)){
+        cnt.set(id,0);
+      }
+      return;
+    };
+    
+    function init(data){
+      console.log("did");
+      const table = document.getElementById("buy-list-table").getElementsByTagName('tbody')[0];//idがこれの、タグがtbodyのやつを貰う、これだとtbody全体を見てる。[0]はこれで見つけたtbodyの0番目という意味なので、絶対に必要。何行目とかじゃなくて、複数tbodyが存在しているとして何個目のtbodyか？ということを意味しているので必須
+      data.forEach(item =>{//dataの中身を範囲for文みたいに見ている、vc<map<?,?>>を範囲for文していると思えばいい、for(map<?,?> mp: data) みたいな感じ
+        
+        const newRow = table.insertRow();//行を追加
+        
+        const nameCell = newRow.insertCell(0);//tableの0番目の要素を作成して、それに紐づける
+        const moneyCell = newRow.insertCell(1);//tableの1番目の要素を作成して、それに紐づける
+        const cntCell = newRow.insertCell(2);//tableの2番目の要素を作成して、それに紐づける
+        
+        //itemには今範囲for文で見てる内容が入ってて、その中身のkeyを使って、 item.(keyの名前)　とやれば値を取得できる
+        nameCell.textContent = item.name;
+        moneyCell.textContent = item.money;
+        
+        //ボタン系に関する追加をする。innerHTMLでcntCellの要素のhtml要素を設定できる、onclickはクリックしたときに発動する内容的な感じ。前のやつだとidを使ってたけど今回はなくなったからとりあえず商品名をIDとしておく
+        cntCell.innerHTML = `
+        <div class="quantity-container">
+          <button onclick="decreaseQuantity('${item.name}')">-</button>
+          <span id="${item.name}" class="initial_color">0</span>
+          <button onclick="increaseQuantity('${item.name}')">+</button>
+        </div>
+        `;
+    
+      });
+    };
+    
+    init(data);//開いたときに4行を作成する
+    
+    const print_money = document.getElementById("total_money");
+    function update_money() {
+        let total_money = 0;
+        for (const [key, value] of cnt) {
+            const item = data.find(obj => obj.name === key);//こう書くと、findという関数で===keyで、keyと一致するdataのやつを取れる、それが含まれてるmap的な感じに思えばいい。複数一致するなら一番最初のが選ばれる
+            total_money += item.money * value;//個数分お金がかかる
+            //total_money -= Math.floor(value / 3) * 10;//3個買うごとに10円引きする。切り捨てをするときはMath.floorの関数に投げればいいらしい、C++やPythonよりめんどい...() いらなくなったのでコメントアウトしている
+        }
+        print_money.textContent = total_money;
+    };
+    
+    
+    function all_reset(payment_method){//スプレッドシートに書き込んで次用にリセットする 各支払いの最後にこれを呼ぶ
+        event.preventDefault();//これがないと、フォームを送った瞬間にページが再読み込みされて、0円に戻ってしまう。その再読み込みのイベントをしないでくれ、という指示をするためのコード
+    
+        // 現在の日付と時間を取得 AIに日付系を教えてもらってコードをコピペした
+        const now = new Date();
+    
+        // 年・月・日・時・分・秒を取得
+        const year = now.getFullYear();        // 年
+        const month = now.getMonth() + 1;      // 月（0が1月なので+1が必要）
+        const day = now.getDate();             // 日
+        const hours = now.getHours();          // 時
+        const minutes = now.getMinutes();      // 分
+        const seconds = now.getSeconds();      // 秒
+    
+        // 曜日を取得（0が日曜日、6が土曜日）
+        const dayOfWeek = now.getDay();
+    
+        // 日時をフォーマットして表示
+        const formattedDate = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+    
+        let data=[
+    
+        ];
+    
+        for(const [key,value] of cnt){//スプレッドシートに記録する
+          data.push([formattedDate,key,payment_method,value]);
+        }
+        google.script.run.appendToSheet(data);
+    
+        ////cntの内容を初期化する、C++の参照渡しがないので、keyを貰ってそれを0に更新する。cnt.clear()にすることにしたのでコメントアウトする
+        //for(const[key,value] of cnt){
+        //  cnt.set(key,0);
+        //}
+        cnt.clear();//0じゃなくて丸ごと消すことにした
+    
+        //テーブルを初期化するんだけど、行と列からセルを指定してtextContentで変更すると=0にしたときに個数変更ボタンも一緒に消えちゃうから、個数の文字のid自体をさして変更する
+        const table = document.getElementById("buy-list-table").getElementsByTagName('tbody')[0];//idが"buy-list-table"であるやつの、htmlタグがtbodyであるやつで、そのbuy-list-tableの中にある、[0]、つまり0スタートで1番目のやつを見つける
+        // テーブル内のすべての行を取得
+        for (let i = 0; i < table.rows.length; i++) {
+          const row = table.rows[i];
+          const id = row.cells[0].textContent;//商品名がそのままidなのでこれを使う。なおtextContentもつけないとセル全体をさしてるだけなので注意
+          console.log(id);
+          document.getElementById(id).textContent = 0;//そのidの文字を"0"にする
+          document.getElementById(id).classList.add('initial_color');//初期状態の色をつける
+        }
+    
+        update_money();//合計金額の表示を0にしたいので関数を呼ぶ
+    };
+    
+    
+    const real_money = document.getElementById("real_money");
+    real_money.addEventListener('click', (event) =>{//現金支払い
+      all_reset("現金支払い");
+    });
+    
+    const money_ticket = document.getElementById("money_ticket");
+    money_ticket.addEventListener('click', (event) =>{//現金支払い
+      all_reset("金券支払い");
+    });
+    
+    const aupay = document.getElementById("aupay");
+    aupay.addEventListener('click', (event) =>{//現金支払い
+      all_reset("aupay支払い");
+    });
+    
+    
+    function decreaseQuantity(id) {//減らすボタンのやつ、idにその数字と紐づけしてるidが入ってる、訂正用に負もOKにしている
+        const target = document.getElementById(id);
+    
+        target.classList.remove('initial_color');//初期化状態の色を設定してるならこれを消す
+        set_cnt(id);
+        cnt.set(id,cnt.get(id)-1);//setじゃないと値の変更ができないので、setの中でgetの数字を貰って変更して渡す
+        update_money();
+        target.textContent--;
+    }
+    
+    function increaseQuantity(id) {//増やすボタンのやつ、idにその数字と紐づけしてるidが入ってる
+        const target = document.getElementById(id);
+    
+        target.classList.remove('initial_color');//初期化状態の色を設定してるならこれを消す
+        set_cnt(id);
+        cnt.set(id,cnt.get(id)+1);
+        update_money();
+        target.textContent++;
+    }
+
+
+    document.getElementById("shuukei").addEventListener('click', (event) =>{
+        google.script.run.getSumCnt();
+        console.log("did");
+    });
+    </script>

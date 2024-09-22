@@ -1,0 +1,223 @@
+<style>
+    body {
+      /* 基本のスタイル bodyはhtmlの公式のタグなので.や#は特別になしで動く*/
+      margin: 0 auto;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      /*前者のフォントがなければ二個目を使用する*/
+      background-color: #f0f0f0;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+  
+    #top-page {
+      /*サイトの一番上のやつ*/
+      text-align: center;
+      background-color: black;
+      color: white;
+      padding: 20px;
+      font-weight: bolder;
+      border-radius: 5px;
+      /*四隅の丸みを設定*/
+      margin-bottom: 20px;
+      /*要素の外側の下方向の余白を決める*/
+    }
+  
+    #footer {
+      display: block;
+      /*自身で作成した非公式タグは、インライン要素として認識される(spanと同じ)なのでこれをブロックとして認識してもらう(divと同じということ)*/
+      /*margin-bottom: 50px;/*下方向に余白*/
+      margin: 0 auto;
+      margin-top: 10px;
+      max-width: 1400px;
+      background-color: rgb(209, 209, 209);
+      padding: 15px;
+      border-radius: 10px;
+  
+    }
+  
+    .manual {
+      /*説明書の部分*/
+      text-align: left;
+      font-size: 20px;
+    }
+  
+  
+    .form-group {
+      margin-bottom: 15px;
+    }
+  
+    .form-group {
+      text-align: center;
+    }
+  
+    /* フォームのスタイル */
+    #id-form {
+      margin-top: 20px;
+    }
+  
+    .form-group {
+      flex-direction: column;
+      margin-bottom: 15px;
+    }
+  
+    /* 入力欄のスタイル これは超重要*/
+    input[type="text"] {
+      /*htmlの<input>の内容で、なおかつtypeが"text"であるやつをさしている なおtypeである必要はないのでidかclassでもよかった*/
+      padding: 10px;
+      /*余白*/
+      font-size: 16px;
+      border: 1px solid #ccc;
+      /*縁取りの線を指定する*/
+      border-radius: 5px;
+      /*四隅の丸みを設定*/
+      width: 100%;
+      max-width: 400px;
+      /*最大の横幅*/
+    }
+  
+    #console-money {
+      /*合計金額を出力する部分*/
+      margin-top: 100px;
+      /*上方向に余白を作る 効果なし*/
+      font-weight: bold;
+      text-align: center;
+      /*display: inline-block;テキストのサイズと背景の四角のサイズを合わせてくれるらしいけどいらん*/
+      background-color: rgb(224, 148, 202);
+      font-size: 50px;
+      padding: 30px;
+      border-radius: 10px;
+      /*四隅を丸くする*/
+      width: 900px;
+      /*ボックス領域のサイズを指定できる text-align:center;は、この指定したサイズの中での中央なので注意*/
+      margin: 0 auto;
+      /* 中央に配置する、「上下の余白、左右の余白」と指定するんだけどautoなら中央にしてくれる*/
+      margin-bottom: 30px;
+    }
+  
+    .text {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  
+    table {
+      margin: 0 auto;
+      /* テーブルを中央に配置 */
+      border-collapse: separate;
+      /* セルの枠線を分離 */
+      border-spacing: 0;
+      /* セル間のスペースを0にする */
+      /*border-radius: 10px; /* テーブルの角を丸くする */
+      /*overflow: hidden; /* 角を丸くするためにセルの枠線がはみ出さないようにする */
+      width: 95%;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 500;
+    }
+  
+    th,
+    td {
+      background-color: rgb(230, 230, 230);
+      border: 1px solid rgb(0, 0, 0);
+      /* セルの枠線 */
+      padding: 8px;
+  
+    }
+  
+    th {
+      background-color: rgb(200, 200, 200);
+      /* ヘッダーの背景色 */
+      font-weight: bold;
+    }
+  
+    .quantity-container {
+      /*htmlに突っ込んでるやつにこのclass名になってる*/
+      font-weight: 100;
+      letter-spacing: 5px;
+    }
+  
+  
+    button {
+      background-color: transparent;
+      /* 背景を透明にする */
+      border: 2px solid #007bff;
+      /* 青色の枠線 */
+      color: #007bff;
+      /* テキスト色を青にする */
+      padding: 10px 20px;
+      text-align: center;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      /* スムーズな変化 */
+    }
+  
+    .cnt_button {
+      margin-top:20px;
+      width: 500px;
+      height: 120px;
+      font-weight: bold;
+      font-size: 40px;
+    }
+  
+    .number_text {
+      font-size: 30px;
+    }
+  
+  
+    button:hover {
+      background-color: #007bff;
+      /* カーソルを上の乗せた時に背景の色を青にする */
+      color: white;
+      /* テキスト色を白にする */
+    }
+  
+    .button-container {
+      //ボタンを真ん中にするために親要素を動かさないといけないらしい(そのためにdivを作ってその中に入れた、ボタンのidにいじっても中央寄せにはならない、長方形領域の図みたいなのを考えるとわかりやすいかも)
+      text-align: center;
+      margin-top: 10px;
+    }
+  
+    .initial_color {
+      //初期化状態だとわかりやすいように色をつけておく
+      color: blue;
+    }
+  
+    .pay_button {
+      font-size: 30px;
+    }
+  
+  
+  
+    /*letter-spacing・・・ 文字の間隔を指定する
+  line-height・・・ 行の高さを指定する
+  padding-left: 300px; 左からどれだけ離れてるかを設定できる
+  
+  margin・・・ 要素の外側の余白（マージン）を指定する
+  margin-bottom・・・ 要素の底辺に当たる外側の余白（マージン）を指定する
+  margin-left・・・ 要素の左辺に当たる外側の余白（マージン）を指定する
+  margin-right・・・ 要素の右辺に当たる外側の余白（マージン）を指定する
+  margin-top・・・ 要素の上辺に当たる外側の余白（マージン）を指定する
+  padding・・・ 要素の内側の余白を指定する
+  margin-top: 30px;  上に30pxの余白 
+  margin-bottom: 30px;  下に30pxの余白 
+  margin-left: 10px;  左に10pxの余白 
+  margin-right: 10px;  右に10pxの余白 
+  
+  border・・・ 要素の周囲にボーダー（枠線）を付ける border 太さ 線の種類 色　で指定できる。border: 1px solid black; solidは実線という意味
+  border-bottom・・・ 要素の底辺にボーダー（枠線）を付ける
+  border-left・・・ 要素の左辺にボーダー（枠線）を付ける
+  border-radius・・・ 要素の角丸についてまとめて指定する
+  border-right・・・ 要素の右辺にボーダー（枠線）を付ける
+  border-style・・・ ボーダー（枠線）の種類を指定する
+  border-top・・・ 要素の上辺にボーダー（枠線）を付ける
+  
+  border-bottom-style・・・ 要素の底辺に設定したボーダー（枠線）のスタイル（種類）を指定する
+  border-bottom-width・・・ 要素の底辺に設定したボーダー（枠線）の太さを指定する
+  border-color・・・ 要素のボーダー（枠線）の色を指定する  コメントアウトの終わりを書いてないせいで
+  </style>がなくて一生バグってたあほすぎ...*/
+  </style>

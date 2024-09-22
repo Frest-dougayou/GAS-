@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>会計リスト 2024</title>
+    <!--<link rel="stylesheet" href="styles.css"> GASはこれで読み込まないらしい-->
+    <?!= HtmlService.createHtmlOutputFromFile('css').getContent(); ?>
+</head>
+
+<body>
+    <div id="top-page">文化祭会計用サイト</div>
+
+    <div id="console-money">現在の金額は<span id="total_money">0</span>円です</div>
+
+    <table id="buy-list-table">
+        <thead>
+            <tr>
+                <th>商品名</th>
+                <th>金額</th>
+                <th class="cnt-cell">購入個数</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <div class="button-container">
+      <button id=real_money class="text">現金で支払いを確定</button>
+      <button id=money_ticket class="text">金券で支払いを確定</button>
+      <button id=aupay class="text">aupayで支払いを確定</button>
+    </div>
+
+    <button id="shuukei" class="cnt_button">集計する</button>
+
+    <footer id="footer"><!--bodyは公式のやつだからcssでも指定できるけど、footerは公式じゃないからidとかclassを用意しないとcssでいじれない-->
+        <div class="text">説明書</div>
+        <div class="manual">①購入する商品に対応した行のボタンをクリックして個数を調整してください</div>
+        <div class="manual">②個数の設定が完了したら、確定用のボタンをクリックしてください</div>
+        <div class="manual">③今回の会計が確定と記録が自動で行われ、テーブルがリセットされるので次の方の会計を行ってください(記録をリセットしたとき個数の数字が青色になります)</div>
+        <div class="manual">※もし間違えて登録した場合はその差分を設定して確定用ボタンから送ってください(金額がマイナスの状態で送信していただいて大丈夫です)</div>
+        <div class="manual">※その場合、訂正内容を送信し終わってから次の方の会計をしてください(訂正と会計を同時に行わないでくださいということです)</div>
+    </footer>
+    
+    <?!= HtmlService.createHtmlOutputFromFile('javascript').getContent(); ?> <!--強制出力という機能を使っていて、そのファイル名のhtmlを開くみたいな機能がある、ファイルの中身を見ると<script... となっているのでjavascriptの内容が使えるということ-->
+</body>
+
+</html>
